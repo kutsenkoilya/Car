@@ -317,7 +317,9 @@ class Car:  # основные методы, которые будут испо�
 
 
     def circle_road(self):
-
+        self.CarCon.move()
+        self.CarCon.turn()
+        self.CarCon.move()
         while not self.WallDet.crossroad: # проверяем что ничего нового не встретилось
             if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
                 self.CarCon.move(CarSettings.MoveSpeed)
