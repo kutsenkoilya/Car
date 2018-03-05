@@ -114,13 +114,3 @@ class MyMap: #карта
         else:
             return -2
 
-
-
-
-    def __del__(self):
-            for joint in self.joints:
-                del joint
-            for dot in self.dots:
-                del dot
-
-
