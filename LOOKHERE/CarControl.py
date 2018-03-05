@@ -1,4 +1,5 @@
-import serial 
+# -*- coding: utf-8 -*-
+import serial
 import time 
 
 class CarControl:

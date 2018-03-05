@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Dot: #точки
     def __init__(self,id):
         self.id = id
