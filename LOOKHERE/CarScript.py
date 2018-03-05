@@ -1,7 +1,7 @@
 from Car import Car
 
 Carry=Car("/dev/ttyUSB0") #создаем машинку
-Carry.SpeedyRoad()
-Carry.CityRoad()
-Carry.CircleRoad()
-Carry.Parking()
+Carry.speedy_road()
+Carry.city_road()
+Carry.circle_road()
+Carry.parking()
