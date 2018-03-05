@@ -18,7 +18,7 @@ class Car:  # основные методы, которые будут испо�
     def __init__(self, device):  # тут бы по хорошему проинициализировать все что у нас написано
         self.CarCon = CarControl(device)  # кар контролу передаем девайс которым пользуемся
         self.SignThread = self.SignThread()
-        self.LineDet = self.LineChecking()
+        self.LineDet = self.LineThread()
         self.CW = self.CameraWrapper(self.LineDet, self.SignThread)
         self.WallDet = self.WallThread(self.CarCon)  # детектор стен
         self.map = Map.MyMap(open('graph.txt'))  # нам нужна карта для построения маршрута
@@ -64,7 +64,7 @@ class Car:  # основные методы, которые будут испо�
     class SignThread(Thread):  # поток для детектирования знаков и ситуаций на дороге
         def __init__(self):
             Thread.__init__(self)
-            self.Detector =Detector()
+            self.Detector = Detector()
             self.bluesigns = 0
             self.RedIsON = False
             self.mark = False
@@ -82,7 +82,7 @@ class Car:  # основные методы, которые будут испо�
         def off(self):
             self.mark = False
 
-    class LineChecking(Thread):  # поток для детектирования полос
+    class LineThread(Thread):  # поток для детектирования полос
         def __init__(self, video_source):
             Thread.__init__(self)
             self.lines = 0
@@ -198,26 +198,29 @@ class Car:  # основные методы, которые будут испо�
         if direction == 1:  # поворот вправо
             while self.WallDet.crossroad:
                 self.CarCon.move(CarSettings.MoveSpeed)
-                self.CarCon.turn()
+                self.CarCon.turn(CarSettings.RightTurnAngle)
         if direction == -1:  # поворот влево
             while self.WallDet.crossroad:
                 self.CarCon.move(CarSettings.MoveSpeed)
-                self.CarCon.turn()
+                self.CarCon.turn(CarSettings.LeftTurnAngle)
         if direction == -2:  # разворот
             while self.WallDet.crossroad:
-                self.CarCon.turn()
+                self.CarCon.turn(CarSettings.LeftTurnAngle)
                 self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.turn(CarSettings.LeftTurnAngle)
+                self.CarCon.move(CarSettings.MoveSpeed)
+
         return
 
     def simple_line(self):  # езда по скоростной
         while not self.WallDet.crossroad and self.SignThread.bluesigns == 0:
             self.light_handler()
             if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
-                    self.CarCon.turn(CarSettings.degree)  # угол настроить
+                    self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
                     self.CarCon.move(CarSettings.MoveSpeed)
                     pass
             if self.LineDet.lines[1] or self.walls[2]:  #
-                    self.CarCon.turn(CarSettings.degree)
+                    self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(CarSettings.MoveSpeed)
                     pass
             else:
@@ -234,16 +237,15 @@ class Car:  # основные методы, которые будут испо�
                 return self.SignThread.bluesigns
             else:
                 if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
-                    self.CarCon.turn(CarSettings.degree)
+                    self.CarCon.turn(CarSettings.LeftToRightDegree)
                     self.CarCon.move(CarSettings.MoveSpeed)
                     
                     pass
                 if self.LineDet.lines[1] or self.walls[2]:  #
-                    self.CarCon.turn(CarSettings.degree)
+                    self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(CarSettings.MoveSpeed)
                     pass
                 else:
-                    self.CarCon.turn(CarSettings.degree)
                     self.CarCon.move(CarSettings.MoveSpeed)  # прямо
 
         return 0  # доехали без проблем до перекрестка или нет?
@@ -299,12 +301,11 @@ class Car:  # основные методы, которые будут испо�
                     if changed:
                         break
                 elif not self.WallDet.crossroad:  # если что-то помешало придется вернутся и перестроить маршрут
-                    # аналогично if(trouble==3) можно использовать
                     joint.Delete()
                     self.turn_on(-2) # придется развернутся -2 разворот
                     break
                 else:
-                    self.startDot=joint.GetNegative(self.startDot)  # если оказались на перекрестке продолжаем движение
+                    self.startDot = joint.GetNegative(self.startDot)  # если оказались на перекрестке продолжаем движение
             self.Path = self.map.FindTheWay(self.startDot, self.finishDot)
 
         self.WallDet.off()
@@ -317,15 +318,17 @@ class Car:  # основные методы, которые будут испо�
 
         while not self.WallDet.crossroad: # проверяем что ничего нового не встретилось
             if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
-                    self.CarCon.move()
-                    pass
-                    # отворачиваем
+                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.turn(CarSettings.RightTurnAngle)
+                pass
+                # отворачиваем
             if self.LineDet.lines[1] or self.walls[2]:  #
-                    self.CarCon.move()
-                    pass
-                    # отворачиваем
+                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.turn(CarSettings.LeftTurnAngle)
+                pass
+                # отворачиваем
             else:
-                    self.CarCon.move() # прямо
+                self.CarCon.move(CarSettings.MoveSpeed) # прямо
         return 3
 
 
@@ -336,7 +339,7 @@ class Car:  # основные методы, которые будут испо�
         self.LineDet.parking = True
         self.LineDet.start()
         
-        while self.LineDet.ParkingDis>CarSettings.ParkingDistance:  # подъезжаем
+        while self.LineDet.ParkingDis > CarSettings.ParkingDistance:  # подъезжаем
             self.CarCon.move()
         
         # паркуемся
