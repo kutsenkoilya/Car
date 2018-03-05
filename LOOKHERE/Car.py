@@ -21,11 +21,10 @@ class Car: #основные методы, которые будут испол�
         self.CW=self.CameraWrapper(LineDet,TroubleDet)
         self.WallDet=self.WallThread(CarCon) #детектор стен
         
-
-
-
+        self.Path
         self.prev=0
-        self.startDot=0
+        self.startDot=1
+        self.finishDot=18
 
     class CameraWrapper(Thread):
         def __init__(self,L,T):
@@ -67,7 +66,7 @@ class Car: #основные методы, которые будут испол�
         def __init__(self):
             Thread.__init__(self)
             self.Detector=Detector()
-            self.signs = 0
+            self.bluesigns = 0
             self.RedIsON=False
             self.mark=False
             self.frame=[]
@@ -77,7 +76,7 @@ class Car: #основные методы, которые будут испол�
             self.mark=True
             while (self.mark):
                     self.brick=self.Detecctor.DetectRedSign(self.frame, False)
-                    self.signs = self.DetectBlueSign(self.frame, False)
+                    self.bluesigns = self.DetectBlueSign(self.frame, False)
                     self.RedIsON = self.Detector.DetectTrLight(self.frame, False) #1 - кирпич (красный знак стоп) 3 - движение вперед 4 - направо 5 - налево 6 - прямо или направо 7 - прямо или налево
 
 
@@ -137,12 +136,21 @@ class Car: #основные методы, которые будут испол�
         return
 
     '''разобраться со знаками'''
-    def SignHandler(self,sign): #метод обработки знаков
-        if (sign==1):#кирпич
-            
-            pass
-        elif (sign==3):#движение вперед
-            
+    def BrickHandler(self,joint):
+        
+        
+        return
+    
+    
+    def BlueSignHandler(self,sign,joint): #метод обработки знаков для городской дороги
+        if (sign==3):#движение вперед
+            prev=0 #пример обработки можно внести исправления
+            for j in self.Path
+                if (prev==j):
+                      if joint.orientation!=prev.orientation:
+                            joint.delete()
+                            self.Path=self.mapFindTheWay(self.startDot,self.finishDot)
+                prev=j
             pass
         elif (sign == 4):#направо
             
@@ -155,8 +163,6 @@ class Car: #основные методы, которые будут испол�
             pass
         elif (sign == 7):#прямо или налево
             
-            pass
-        else:
             pass
         return
 
@@ -185,7 +191,7 @@ class Car: #основные методы, которые будут испол�
 
 
     def SimpleLine(self):#езда по скоростной
-        while(not self.WallDet.crossroad and self.TroubleDet==0): #проверяем что ничего нового не встретилось
+        while(not self.WallDet.crossroad and self.TroubleDet.bluesigns==0): #проверяем что ничего нового не встретилось
             self.SemaforHandler()
             if (self.LineDet.lines[0] or self.walls[0]): #отъезжаем от стены или от линии подобрать константы
                     self.CarCon.move()
@@ -228,18 +234,23 @@ class Car: #основные методы, которые будут испол�
         self.WallDet.start()
         self.TroubleDet.start()
         self.LineDet.start()
-        for i in range(2):#всего два поворота ведь так7
-            self.SimpleLine(); #держимся нашей прямой
-            if (self.TroubleDet.signs==6 or self.WallDet.crossroad or self.TroubleDet.signs==4): #поворот открылся направо
-                # на самом деле достаточно знать только что правый поворот открыт но пока можно говорить что это все перекрестки
-                self.TurnOn(1)
+        self.SimpleLine(); #держимся нашей прямой
+        if (self.TroubleDet.bluesigns==6 or self.WallDet.crossroad or self.TroubleDet.bluesigns==4): #поворот открылся направо
+            # на самом деле достаточно знать только что правый поворот открыт но пока можно говорить что это все перекрестки
+            self.TurnOn(1)
+        self.SimpleLine();
+        if self.TroubleDet.bluesigns==3:
+            self.TurnOn(0)
+            self.startDot=1
+        else:
+            self.startDot=9
+            self.TurnOn(1)
         self.TroubleDet.mark = False
         self.LineDet.mark = False
         self.WallDet.mark= False
-        self.startDot=-2
         return 1  # по идее должна вернуть значение обозначающее на каком повороте мы заехали
 
-    def CityRoad(self,startDot):
+    def CityRoad(self):
 
         self.WallDet.start()
         self.TroubleDet.start()
@@ -252,11 +263,11 @@ class Car: #основные методы, которые будут испол�
         for dot in self.map.dots:
             if dot.id==self.startDot:
                 self.startDot=dot
-            if dot.id==18:
-                finishDot=dot
-        self.Path=self.map.FindTheWay(startDot,finishDot) #теперь наш путь лежит в path
+            if dot.id==self.finishDot:
+                self.finishDot=dot
+        self.Path=self.map.FindTheWay(self.startDot,self.finishDot) #теперь наш путь лежит в path
         #идея такая пытаемся поехать в нужном направлении не получилось удаляем ребро, по новой считаем
-        while (startDot!=finishDot): #пока не доехали до финиша
+        while (self.startDot!=self.finishDot): #пока не доехали до финиша
             for joint in self.Path:
                 direction=self.map.GetTurnDirection(self.prev,joint) #смотрим направление поворота на данном перекресте
                 self.Car.TurnOn(direction) #поворачиваем на повороте 0 прямо 1 право -1 влево 2 круговое движение
@@ -265,7 +276,7 @@ class Car: #основные методы, которые будут испол�
                 if (not self.WallDet.crossroad): #если что-то помешало придется вернутся и перестроить маршрут удаляя это ребро
                     #аналогично if(trouble==3) можно использовать
                     joint.Delete()
-                    self.Path=self.map.FindTheWay(startDot,finishDot)
+                    self.Path=self.map.FindTheWay(self.startDot,self.finishDot)
                     self.TurnOn(-2) #придется развернутся -2 разворот
                     break
                 else:
