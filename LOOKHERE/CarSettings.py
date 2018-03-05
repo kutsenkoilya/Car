@@ -5,6 +5,10 @@ Created on Wed Feb  7 01:28:05 2018
 @author: Илья
 """
 
+#DETECTION RANGE
+WallRange = 100
+ParkingDistance = 10
+
 #CAMERA SETTINGS
 PiCameraResH = 240
 PiCameraResW = 320
@@ -12,7 +16,10 @@ PiCameraFrameRate = 32
 RecEnabled = 0
 
 #MOVEMENT SETTINGS
+MoveSpeed = 125
 StartSpeed = 125
+RightTurnAngle = 90
+LeftTurnAngle = -90
 
 
 #RightLane SETTINGS
