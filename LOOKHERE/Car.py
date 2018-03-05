@@ -141,15 +141,15 @@ class Car:  # основные методы, которые будут испо�
         
         return
 
-    def BlueSignHandler(self,sign,joint):  # метод обработки знаков для городской дороги
+    def BlueSignHandler(self, sign, joint):  # метод обработки знаков для городской дороги
         if sign == 3:  # движение вперед
             prev = 0  # пример обработки можно внести исправления
             for j in self.Path:
                 if prev == j:
-                      if joint.orientation!=prev.orientation:
-                            joint.delete()
-                            self.Path=self.mapFindTheWay(self.startDot,self.finishDot)
-                prev=j
+                    if joint.orientation != prev.orientation:
+                        joint.delete()
+                        self.Path = self.mapFindTheWay(self.startDot,self.finishDot)
+                prev = j
             pass
         elif sign == 4:  # направо
             
@@ -183,52 +183,46 @@ class Car:  # основные методы, которые будут испо�
                 self.CarCon.move(CarSettings.MoveSpeed)
         return
 
-
-
-    def SimpleLine(self):#езда по скоростной
-        while(not self.WallDet.crossroad and self.TroubleDet.bluesigns==0): #проверяем что ничего нового не встретилось
+    def SimpleLine(self):  # езда по скоростной
+        while not self.WallDet.crossroad and self.TroubleDet.bluesigns==0:
             self.SemaforHandler()
-            if (self.LineDet.lines[0] or self.walls[0]): #отъезжаем от стены или от линии подобрать константы
-                    self.CarCon.turn(CarSettings.degree) #угол настроить
+            if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
+                    self.CarCon.turn(CarSettings.degree)  # угол настроить
                     self.CarCon.move(CarSettings.MoveSpeed)
                     pass
-                    #отворачиваем
-            if (self.LineDet.lines[1] or self.walls[2]):  #
+            if self.LineDet.lines[1] or self.walls[2]:  #
                     self.CarCon.turn(CarSettings.degree)
                     self.CarCon.move(CarSettings.MoveSpeed)
                     pass
-                    #отворачиваем
             else:
-                    self.CarCon.move(CarSettings.MoveSpeed) #прямо
-        return self.TroubleDet.sign #иначе завершаем движение и выдаем знак
+                    self.CarCon.move(CarSettings.MoveSpeed)  # прямо
+        return self.TroubleDet.sign  # иначе завершаем движение и выдаем знак
     
     
-    def StayOnTheLine(self, joint): #двигаемся по маршруту
-        while(not self.WallDet.crossroad): #проверяем что ничего нового не встретилось
+    def StayOnTheLine(self, joint):  # двигаемся по маршруту
+        while not self.WallDet.crossroad:  # проверяем что ничего нового не встретилось
             self.SemaforHandler()
-            if (self.TroubleDet.brick):
+            if self.TroubleDet.brick:
                 self.BrickHandler(joint)
                 return 1
-            elif (self.TroubleDet.bluesigns!=0):
+            elif self.TroubleDet.bluesigns!=0:
                 self.SignHandler(self.TroubleDet.signs, joint)
                 return 1
             else:
-                if self.LineDet.lines[0] or self.walls[0]: #отъезжаем от стены или от линии подобрать константы
+                if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.degree)
                     self.CarCon.move(CarSettings.MoveSpeed)
                     
                     pass
-                    #отворачиваем
                 if self.LineDet.lines[1] or self.walls[2]:  #
                     self.CarCon.turn(CarSettings.degree)
                     self.CarCon.move(CarSettings.MoveSpeed)
                     pass
-                    #отворачиваем
                 else:
                     self.CarCon.turn(CarSettings.degree)
-                    self.CarCon.move(CarSettings.MoveSpeed) #прямо
+                    self.CarCon.move(CarSettings.MoveSpeed)  # прямо
 
-        return 1 #иначе завершаем движение и выдаем почему завершили
+        return 0  # доехали без проблем до перекрестка или нет?
 
 
     def SpeedyRoad(self):# просто едем по по линии и поворачиваем на первых? поворотах направо... Всё отлично!!
