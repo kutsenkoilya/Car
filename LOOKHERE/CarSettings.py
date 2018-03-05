@@ -6,6 +6,7 @@ Created on Wed Feb  7 01:28:05 2018
 """
 
 #DETECTION RANGE
+CriticalWallRange =30
 WallRange = 100
 ParkingDistance = 10
 
