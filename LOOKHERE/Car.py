@@ -44,8 +44,8 @@ class Car:  # основные методы, которые будут испо�
 
         def run(self):  # dsf
             self.mark = True
-            while self.mark:
-                for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
+            while (self.mark):
+				for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
 					image = frame.array
 					print(image.shape)
 					self.L.frame = image.copy()
