@@ -134,6 +134,7 @@ class Car:  # основные методы, которые будут испо�
 
     def light_handler(self):
         while self.SignThread.RedIsON:
+            self.CarCon.move(0,CarSetting.Stop)
             pass
         return
 
@@ -194,21 +195,21 @@ class Car:  # основные методы, которые будут испо�
     def turn_on(self, direction): # переезд перекрестка
         if direction == 0:  # едем прямо
             while self.WallDet.crossroad:
-                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.move(1,CarSettings.MoveSpeed)
         if direction == 1:  # поворот вправо
             while self.WallDet.crossroad:
-                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.RightTurnAngle)
         if direction == -1:  # поворот влево
             while self.WallDet.crossroad:
-                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
         if direction == -2:  # разворот
             while self.WallDet.crossroad:
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
-                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
-                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.move(1,CarSettings.MoveSpeed)
 
         return
 
@@ -218,23 +219,23 @@ class Car:  # основные методы, которые будут испо�
             if self.WallDet.walls[1]<CarSettings.WallRange:
                 if self.WallDet.walls[0]>CarSettings.WallRange:
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
-                    self.CarCon.move(CarSettings.MoveSpeed)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                 else:
                     self.CarCon.turn(Car.RightToLeftDegree)
-                    self.CarCon.move(CarSettings.MoveSpeed)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
             elif:
                 if self.LineDet.lines[0] < CarSettings.WallRange or self..WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
-                    self.CarCon.move(CarSettings.MoveSpeed)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
                     pass
                 if self.LineDet.lines[1] < CarSettings.WallRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
-                    self.CarCon.move(CarSettings.MoveSpeed)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
                     pass
                 else:
-                    self.CarCon.move(CarSettings.MoveSpeed)  # прямо
+                    self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
         return self.SignThread.bluesigns  # иначе завершаем движение и выдаем знак
 
     def moving_on_line(self, joint):  # двигаемся по маршруту
@@ -249,26 +250,26 @@ class Car:  # основные методы, которые будут испо�
                 if self.WallDet.walls[1]<CarSettings.WallRange:
                     if self.WallDet.walls[0]>CarSettings.WallRange:
                         self.CarCon.turn(CarSettings.RightToLeftDegree)
-                        self.CarCon.move(CarSettings.MoveSpeed)
+                        self.CarCon.move(1,CarSettings.MoveSpeed)
                         self.CarCon.turn(CarSettings.DefaultAngle)
                     elif self.WallDet.walls[2]>CarSettings.WallRange:
                         self.CarCon.turn(Car.LeftToRightDegree)
-                        self.CarCon.move(CarSettings.MoveSpeed)
+                        self.CarCon.move(1,CarSettings.MoveSpeed)
                         self.CarCon.turn(CarSettings.DefaultAngle)
                     else:
                         return
                 if self.LineDet.lines[0] < CarSettings.WallRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)
-                    self.CarCon.move(CarSettings.MoveSpeed)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 elif self.LineDet.lines[1] < CarSettings.WallRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
-                    self.CarCon.move(CarSettings.MoveSpeed)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 else:
-                    self.CarCon.move(CarSettings.MoveSpeed)  # прямо
+                    self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
 
         return 0  # доехали без проблем до перекрестка или нет?
 
@@ -342,17 +343,17 @@ class Car:  # основные методы, которые будут испо�
         self.CarCon.move()
         while not self.WallDet.crossroad: # проверяем что ничего нового не встретилось
             if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
-                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.move(CarSettings.1,MoveSpeed)
                 self.CarCon.turn(CarSettings.RightTurnAngle)
                 pass
                 # отворачиваем
             if self.LineDet.lines[1] or self.walls[2]:  #
-                self.CarCon.move(CarSettings.MoveSpeed)
+                self.CarCon.move(CarSettings.1,MoveSpeed)
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
                 pass
                 # отворачиваем
             else:
-                self.CarCon.move(CarSettings.MoveSpeed) # прямо
+                self.CarCon.move(CarSettings.1,MoveSpeed) # прямо
         return 3
 
 
