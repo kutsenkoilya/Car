@@ -148,7 +148,7 @@ class Car:  # основные методы, которые будут испо�
 
     def light_handler(self):
         while self.SignThread.RedIsON:
-            self.CarCon.move(0,CarSetting.Stop)
+            self.CarCon.move(0,CarSettings.Stop)
             pass
         return
 
