@@ -257,9 +257,9 @@ class Car:  # основные методы, которые будут испо�
         while True:
             
             self.CarCon.move(1,125)
-            if self.WallDet.walls[1]<CarSettings.CriticalWallRange:
-                self.CarCon.move(0,CarSettings.Stop)
-                break
+            #if self.WallDet.walls[1]<CarSettings.CriticalWallRange:
+             #   self.CarCon.move(0,CarSettings.Stop)
+              #  break
             
             
         self.WallDet.off()
