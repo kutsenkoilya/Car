@@ -49,7 +49,6 @@ class Car:  # основные методы, которые будут испо�
 					
                     image = frame.array
                     print(image.shape)
-					
 					self.L.frame = image.copy()
                     self.T.frame = image
                     k = cv2.waitKey(30) & 0xff
