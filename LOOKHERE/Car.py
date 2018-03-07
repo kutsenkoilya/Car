@@ -225,8 +225,8 @@ class Car:  # основные методы, которые будут испо�
                     self.CarCon.turn(Car.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
-            elif:
-                if self.LineDet.lines[0] < CarSettings.WallRange or self..WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
+            else:
+                if self.LineDet.lines[0] < CarSettings.WallRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     pass
@@ -343,17 +343,17 @@ class Car:  # основные методы, которые будут испо�
         self.CarCon.move()
         while not self.WallDet.crossroad: # проверяем что ничего нового не встретилось
             if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
-                self.CarCon.move(CarSettings.1,MoveSpeed)
+                self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.RightTurnAngle)
                 pass
                 # отворачиваем
             if self.LineDet.lines[1] or self.walls[2]:  #
-                self.CarCon.move(CarSettings.1,MoveSpeed)
+                self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
                 pass
                 # отворачиваем
             else:
-                self.CarCon.move(CarSettings.1,MoveSpeed) # прямо
+                self.CarCon.move(1,CarSettings.MoveSpeed) # прямо
         return 3
 
 
