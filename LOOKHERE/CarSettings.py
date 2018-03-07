@@ -7,7 +7,7 @@ Created on Wed Feb  7 01:28:05 2018
 
 #DETECTION RANGE
 LineRange = 30
-CriticalWallRange = 30 #в сантиметрах
+CriticalWallRange = 10  #в сантиметрах
 WallRange = 10
 ParkingDistance = 10
 
