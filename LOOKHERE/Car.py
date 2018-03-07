@@ -263,6 +263,7 @@ class Car:  # основные методы, которые будут испо�
         while True:
             time.sleep(1)
             walls = self.WD.getDistance()
+            print(self.walls[0],self.walls[1],self.walls[2])
             time.sleep(1)
             self.CarCon.move(1,125)
             if walls[1]<CarSettings.CriticalWallRange:
