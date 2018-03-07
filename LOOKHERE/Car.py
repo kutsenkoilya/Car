@@ -7,6 +7,7 @@ from Detector import Detector
 from threading import Thread
 import cv2
 import time
+import numpy as np
 
 from picamera.array import PiRGBArray
 from picamera import PiCamera
