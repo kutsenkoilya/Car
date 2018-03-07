@@ -89,7 +89,7 @@ class Car:  # основные методы, которые будут испо�
             self.lines = 0
             self.mark = False
             self.parking = False
-            self.frame = 0
+            self.frame = []
             self.Road = 0
             self.ParkingDis = 0
 
