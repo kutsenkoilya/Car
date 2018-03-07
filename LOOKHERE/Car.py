@@ -97,7 +97,7 @@ class Car:  # основные методы, которые будут испо�
             
             self.mark = True
             vecs = [[-3, -1, 70], [3, -1, 70]]
-            self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=True)
+            self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=False)
             if not self.parking:
                 while self.mark:
                     if len(self.frame)>0:
@@ -292,6 +292,7 @@ class Car:  # основные методы, которые будут испо�
 
     def speedy_road(self):  # просто едем по по линии и поворачиваем на первых? поворотах направо... Всё отлично!!
         self.CW.start()
+        time.sleep(1)
         self.WallDet.start()
         self.SignThread.start()
         self.LineDet.start()
