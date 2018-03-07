@@ -68,7 +68,7 @@ class Car:  # основные методы, которые будут испо�
             self.bluesigns = 0
             self.RedIsON = False
             self.mark = False
-            self.frame = []
+            self.frame = np.array([])
             self.brick = 0
 
         def run(self):  # по задумке 0-прямая дорога, 1-перекресток, 2-знак,3-препятствие
@@ -89,7 +89,7 @@ class Car:  # основные методы, которые будут испо�
             self.lines = 0
             self.mark = False
             self.parking = False
-            self.frame = []
+            self.frame = np.array([])
             self.Road = 0
             self.ParkingDis = 0
 
