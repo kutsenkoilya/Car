@@ -86,7 +86,7 @@ class Car:  # основные методы, которые будут испо�
     class LineThread(Thread):  # поток для детектирования полос
         def __init__(self):
             Thread.__init__(self)
-            self.lines = 0
+            self.lines = []
             self.mark = False
             self.parking = False
             self.frame = np.array([])
