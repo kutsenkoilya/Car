@@ -47,7 +47,7 @@ class Car:  # основные методы, которые будут испо�
             while (self.mark):
                 for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
                     image = frame.array
-                    image.copy()
+                    self.L.frame = image.copy()
                     self.T.frame = image
                     k = cv2.waitKey(30) & 0xff
                     if k == 27:
