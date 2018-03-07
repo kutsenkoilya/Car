@@ -132,6 +132,7 @@ class Car:  # основные методы, которые будут испо�
                 for i in range (3):
                     if type(cop[i]) == type(None):
                         self.walls[i]=10000
+                print(self.WallDet.walls[1])
                 else:
                     self.walls[i]=cop[i]
                 self.walls = self.WD.getDistance()
@@ -255,7 +256,6 @@ class Car:  # основные методы, которые будут испо�
     def Road(self):
         self.WallDet.start()
         while True:
-            print(self.WallDet.walls[0])
             self.CarCon.move(1,125)
             if self.WallDet.walls[1]<CarSettings.CriticalWallRange:
                 self.CarCon.move(0,CarSettings.Stop)
