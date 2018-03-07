@@ -117,6 +117,7 @@ class Car:  # основные методы, которые будут испо�
             self.walls = 0  # 0 слева 1 спереди 2 справа
             self.mark = False
             self.crossroad = False
+            self.fullcross = False
 
         def run(self):
             self.mark = True
@@ -128,6 +129,10 @@ class Car:  # основные методы, которые будут испо�
                     self.crossroad = True
                 else:
                     self.crossroad = False
+                if self.walls[0] < CarSettings.WallRange and self.walls[2] < CarSettings.WallRange:  # подставить константы
+                    self.fullcross = True
+                else:
+                    self.fullcross = False
 
         def off(self):
             self.mark = False
@@ -226,11 +231,11 @@ class Car:  # основные методы, которые будут испо�
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
             else:
-                if self.LineDet.lines[0] < CarSettings.WallRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
+                if self.LineDet.lines[0] < CarSettings.LineRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     pass
-                if self.LineDet.lines[1] < CarSettings.WallRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
+                if self.LineDet.lines[1] < CarSettings.LineRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     pass
@@ -258,12 +263,12 @@ class Car:  # основные методы, которые будут испо�
                         self.CarCon.turn(CarSettings.DefaultAngle)
                     else:
                         return
-                if self.LineDet.lines[0] < CarSettings.WallRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
+                if self.LineDet.lines[0] < CarSettings.LineRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
-                elif self.LineDet.lines[1] < CarSettings.WallRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
+                elif self.LineDet.lines[1] < CarSettings.LineRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
