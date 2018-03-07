@@ -129,10 +129,10 @@ class Car:  # основные методы, которые будут испо�
 
         def run(self):
             self.mark = True
-            self.walls = self.WD.Detect()
+            self.walls = self.WD.getDistance()
 
             while self.mark:
-                self.walls = self.WD.Detect()
+                self.walls = self.WD.getDistance()
                 if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
                     self.crossroad = True
                 else:
@@ -235,7 +235,7 @@ class Car:  # основные методы, которые будут испо�
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                 else:
-                    self.CarCon.turn(Car.RightToLeftDegree)
+                    self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
             else:
