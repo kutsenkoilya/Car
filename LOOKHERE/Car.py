@@ -262,8 +262,10 @@ class Car:  # основные методы, которые будут испо�
     def Road(self):
         while True:
             time.sleep(1)
+            walls = self.WD.getDistance()
+            time.sleep(1)
             self.CarCon.move(1,125)
-            if self.WallDet.walls[1]<CarSettings.CriticalWallRange:
+            if walls[1]<CarSettings.CriticalWallRange:
                 self.CarCon.move(0,CarSettings.Stop)
                 break
             
