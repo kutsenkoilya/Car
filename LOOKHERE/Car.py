@@ -255,7 +255,7 @@ class Car:  # основные методы, которые будут испо�
     def Road(self):
         self.WallDet.start()
         self.CarCon.move(1,125)
-        if self.WallDet.walls[1]<CarSettings.CriticalWallRange:
+        while self.WallDet.walls[1]<CarSettings.CriticalWallRange:
             self.CarCon.move(0,CarSettings.Stop)
             
             
