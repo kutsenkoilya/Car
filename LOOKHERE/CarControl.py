@@ -19,7 +19,7 @@ class CarControl:
         time.sleep(0.0002)
     
     def getDistance(self):
-        dists = [None, None, None];
+        dists = [10000, 10000, 10000];
 
         self.ser.write(int(4).to_bytes(1, 'big'))
         self.ser.write(int(0).to_bytes(1, 'big'))
