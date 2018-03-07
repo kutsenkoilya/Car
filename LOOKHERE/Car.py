@@ -75,7 +75,7 @@ class Car:  # основные методы, которые будут испо�
             self.mark = True
             while self.mark:
                 if len(self.frame)>0:
-                    self.brick = self.Detecctor.DetectRedSign(self.frame, False)
+                    self.brick = self.Detector.DetectRedSign(self.frame, False)
                     self.bluesigns = self.DetectBlueSign(self.frame, False)
                     self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
                     # 3 - движение вперед 4 - направо 5 - налево 6 - прямо или направо 7 - прямо или налево
