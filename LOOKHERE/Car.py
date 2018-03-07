@@ -251,7 +251,9 @@ class Car:  # основные методы, которые будут испо�
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
         return self.SignThread.bluesigns  # иначе завершаем движение и выдаем знак
-
+	def Road(self):
+		self.CarCon.move(1,CarSettings.MoveSpeed)
+		
     def moving_on_line(self, joint):  # двигаемся по маршруту
         while not self.WallDet.crossroad:  # проверяем что ничего нового не встретилось
             self.light_handler()
