@@ -95,15 +95,20 @@ class Car:  # основные методы, которые будут испо�
         def run(self):
             
             self.mark = True
+            vecs = [[-3, -1, 70], [3, -1, 70]]
+            self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=True)
             if not self.parking:
-                vecs = [[-3, -1, 70], [3, -1, 70]]
-                self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=True)
-
                 while self.mark:
-                    print(self.Road.poke(self.frame))
                     self.lines = self.Road.poke(self.frame)
             else:
                 while self.mark:
+                    self.ParkingDis = self.Road.poke(self.frame)
+                    
+                    
+                    
+                    
+                    
+                    
                     pass
                     # detect parking
 
@@ -279,7 +284,7 @@ class Car:  # основные методы, которые будут испо�
         return 0  # доехали без проблем до перекрестка или нет?
 
     def speedy_road(self):  # просто едем по по линии и поворачиваем на первых? поворотах направо... Всё отлично!!
-        
+        self.CW.start()
         self.WallDet.start()
         self.SignThread.start()
         self.LineDet.start()
@@ -297,10 +302,11 @@ class Car:  # основные методы, которые будут испо�
         self.SignThread.off()
         self.LineDet.off()
         self.WallDet.off()
+        self.CW.off()
         return 1  # по идее должна вернуть значение обозначающее на каком повороте мы заехали
 
     def city_road(self):
-
+        self.CW.start()
         self.WallDet.start()
         self.SignThread.start()
         self.LineDet.start()
@@ -335,7 +341,7 @@ class Car:  # основные методы, которые будут испо�
                 else:
                     self.startDot = joint.GetNegative(self.startDot)  # если оказались на перекрестке продолжаем движение
             self.Path = self.map.FindTheWay(self.startDot, self.finishDot)
-
+        self.CW.off()
         self.WallDet.off()
         self.SignThread.off()
         self.LineDet.off()
@@ -343,6 +349,11 @@ class Car:  # основные методы, которые будут испо�
 
 
     def circle_road(self):
+        self.CW.start()
+        self.LineDet.start()
+        self.WallDet.start()
+        
+        
         self.CarCon.move()
         self.CarCon.turn()
         self.CarCon.move()
@@ -359,12 +370,17 @@ class Car:  # основные методы, которые будут испо�
                 # отворачиваем
             else:
                 self.CarCon.move(1,CarSettings.MoveSpeed) # прямо
+         
+        self.CW.off()
+        self.LineDet.off()
+        self.WallDet.off()
         return 3
 
 
 
 
     def parking(self):
+        self.CW.start()
         self.WallDet.start()
         self.LineDet.parking = True
         self.LineDet.start()
@@ -373,7 +389,8 @@ class Car:  # основные методы, которые будут испо�
             self.CarCon.move()
         
         # паркуемся
-
+        
+        self.CW.off()
         self.WallDet.off()
         self.LineDet.off()
         return 4
