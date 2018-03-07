@@ -132,9 +132,10 @@ class Car:  # основные методы, которые будут испо�
                 for i in range (3):
                     if type(cop[i]) == type(None):
                         self.walls[i]=10000
+                
+                    else:
+                        self.walls[i]=cop[i]
                 print(self.WallDet.walls[1])
-                else:
-                    self.walls[i]=cop[i]
                 self.walls = self.WD.getDistance()
                 if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
                     self.crossroad = True
