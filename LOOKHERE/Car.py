@@ -101,7 +101,8 @@ class Car:  # основные методы, которые будут испо�
             if not self.parking:
                 while self.mark:
                     if len(self.frame)>0:
-                        self.lines = self.Road.poke(self.frame)
+                        self.Road.img=self.frame
+                        self.lines= self.Road.poke()
                         time.sleep(0.01)
             else:
                 while self.mark:
