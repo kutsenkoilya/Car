@@ -108,11 +108,6 @@ class Car:  # основные методы, которые будут испо�
                     if len(self.frame)>0:
                         self.ParkingDis = self.Road.poke(self.frame)
                     
-                    
-                    
-                    
-                    
-                    
                     pass
                     # detect parking
 
@@ -278,6 +273,7 @@ class Car:  # основные методы, которые будут испо�
                         self.CarCon.move(1,CarSettings.MoveSpeed)
                         self.CarCon.turn(CarSettings.DefaultAngle)
                     else:
+                        self.CarCon.move(0,CarSettings.Stop)
                         return
                 if self.LineDet.lines[0] < CarSettings.LineRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)
