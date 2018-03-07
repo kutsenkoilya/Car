@@ -6,8 +6,8 @@ Created on Wed Feb  7 01:28:05 2018
 """
 
 #DETECTION RANGE
-DefaultAngle = 0
-CriticalWallRange =30 #в сантиметрах
+LineRange = 30
+CriticalWallRange = 30 #в сантиметрах
 WallRange = 10
 ParkingDistance = 10
 
@@ -18,13 +18,15 @@ PiCameraFrameRate = 32
 RecEnabled = 0
 
 #MOVEMENT SETTINGS
+DefaultAngle = 90
+RightTurnAngle = 115
+LeftTurnAngle = 65
+RightToLeftDegree = 105
+LeftToRightDegree = 75
 Stop = 10
-RightToLeftDegree = 30
-LeftToRightDegree = 30
 MoveSpeed = 125
 StartSpeed = 125
-RightTurnAngle = 90
-LeftTurnAngle = -90
+
 
 
 #RightLane SETTINGS
