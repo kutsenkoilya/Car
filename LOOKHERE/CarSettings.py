@@ -8,7 +8,7 @@ Created on Wed Feb  7 01:28:05 2018
 #DETECTION RANGE
 DefaultAngle = 0
 CriticalWallRange =30 #в сантиметрах
-WallRange = 100
+WallRange = 10
 ParkingDistance = 10
 
 #CAMERA SETTINGS
