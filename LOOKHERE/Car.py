@@ -122,7 +122,7 @@ class Car:  # основные методы, которые будут испо�
         def __init__(self,control):
             Thread.__init__(self)
             self.WD = control
-            self.walls = 0  # 0 слева 1 спереди 2 справа
+            self.walls = [0,0,0]  # 0 слева 1 спереди 2 справа
             self.mark = False
             self.crossroad = False
             self.fullcross = False
