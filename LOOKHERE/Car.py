@@ -135,7 +135,7 @@ class Car:  # основные методы, которые будут испо�
                 
                     else:
                         self.walls[i]=cop[i]
-                print(self.WallDet.walls[1])
+                print(self.walls[1])
                 self.walls = self.WD.getDistance()
                 if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
                     self.crossroad = True
