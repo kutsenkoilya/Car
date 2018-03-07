@@ -16,7 +16,7 @@ import CarSettings as CarSettings
 
 class Car:  # основные методы, которые будут использоваться на соревнованиях speedy_road,city_road,parking, circle_road
     def __init__(self, device):  # тут бы по хорошему проинициализировать все что у нас написано
-        self.CarCon = CarControl(device)  # кар контролу передаем девайс которым пользуемся
+        self.CarCon = CarControl.CarControl(device)  # кар контролу передаем девайс которым пользуемся
         self.SignThread = self.SignThread()
         self.LineDet = self.LineThread()
         self.CW = self.CameraWrapper(self.LineDet, self.SignThread)
@@ -68,12 +68,13 @@ class Car:  # основные методы, которые будут испо�
             self.bluesigns = 0
             self.RedIsON = False
             self.mark = False
-            self.frame = []
+            self.frame = 0
             self.brick = 0
 
         def run(self):  # по задумке 0-прямая дорога, 1-перекресток, 2-знак,3-препятствие
             self.mark = True
             while self.mark:
+                if self.frame!=0:
                     self.brick = self.Detecctor.DetectRedSign(self.frame, False)
                     self.bluesigns = self.DetectBlueSign(self.frame, False)
                     self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
@@ -83,12 +84,12 @@ class Car:  # основные методы, которые будут испо�
             self.mark = False
 
     class LineThread(Thread):  # поток для детектирования полос
-        def __init__(self, video_source):
+        def __init__(self):
             Thread.__init__(self)
             self.lines = 0
             self.mark = False
             self.parking = False
-            self.frame = []
+            self.frame = 0
             self.Road = 0
             self.ParkingDis = 0
 
@@ -99,10 +100,12 @@ class Car:  # основные методы, которые будут испо�
             self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=True)
             if not self.parking:
                 while self.mark:
-                    self.lines = self.Road.poke(self.frame)
+                    if self.frame!=0:
+                        self.lines = self.Road.poke(self.frame)
             else:
                 while self.mark:
-                    self.ParkingDis = self.Road.poke(self.frame)
+                    if self.frame!=0:
+                        self.ParkingDis = self.Road.poke(self.frame)
                     
                     
                     
