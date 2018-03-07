@@ -1,4 +1,4 @@
 from Car import Car
 Carry = Car("/dev/ttyUSB0")
-Car.simple_line()
+Carry.simple_line()
 

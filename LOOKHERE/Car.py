@@ -52,7 +52,7 @@ class Car:  # основные методы, которые будут испо�
                     k = cv2.waitKey(30) & 0xff
                     if k == 27:
                         break;
-
+                    time.sleep(0.01)
                     # очистка кадра. важная штука!
                     self.rawCapture.truncate(0)
         
@@ -79,7 +79,7 @@ class Car:  # основные методы, которые будут испо�
                     self.bluesigns = self.Detector.DetectBlueSign(self.frame, False)
                     self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
                     # 3 - движение вперед 4 - направо 5 - налево 6 - прямо или направо 7 - прямо или налево
-
+                    time.sleep(0.01)    
         def off(self):
             self.mark = False
 
@@ -102,6 +102,7 @@ class Car:  # основные методы, которые будут испо�
                 while self.mark:
                     if len(self.frame)>0:
                         self.lines = self.Road.poke(self.frame)
+                        time.sleep(0.01)
             else:
                 while self.mark:
                     if len(self.frame)>0:
