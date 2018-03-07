@@ -27,6 +27,11 @@ class Car:  # основные методы, которые будут испо�
         self.prev = 0
         self.startDot = 1
         self.finishDot = 18
+        self.CW.start()
+        time.sleep(1)
+        self.WallDet.start()
+        self.SignThread.start()
+        self.LineDet.start()
 
     class CameraWrapper(Thread):
         def __init__(self, l, t):
@@ -255,7 +260,6 @@ class Car:  # основные методы, которые будут испо�
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
         return self.SignThread.bluesigns  # иначе завершаем движение и выдаем знак
     def Road(self):
-        self.WallDet.start()
         while True:
             self.CarCon.move(1,125)
             if self.WallDet.walls[1]<CarSettings.CriticalWallRange:
@@ -263,8 +267,7 @@ class Car:  # основные методы, которые будут испо�
                 break
             
             
-        self.WallDet.off()
-		
+        		
     def moving_on_line(self, joint):  # двигаемся по маршруту
         while not self.WallDet.crossroad:  # проверяем что ничего нового не встретилось
             self.light_handler()
@@ -302,11 +305,8 @@ class Car:  # основные методы, которые будут испо�
         return 0  # доехали без проблем до перекрестка или нет?
 
     def speedy_road(self):  # просто едем по по линии и поворачиваем на первых? поворотах направо... Всё отлично!!
-        self.CW.start()
-        time.sleep(1)
-        self.WallDet.start()
-        self.SignThread.start()
-        self.LineDet.start()
+       
+        
         self.simple_line()  # держимся нашей прямой
         if self.SignThread.bluesigns == 6 or self.WallDet.crossroad or self.SignThread.bluesigns==4:  # поворот направо
             # на самом деле достаточно знать только что правый поворот открыт
@@ -318,17 +318,10 @@ class Car:  # основные методы, которые будут испо�
         else:
             self.startDot = 9
             self.turn_on(1)
-        self.SignThread.off()
-        self.LineDet.off()
-        self.WallDet.off()
-        self.CW.off()
+
         return 1  # по идее должна вернуть значение обозначающее на каком повороте мы заехали
 
     def city_road(self):
-        self.CW.start()
-        self.WallDet.start()
-        self.SignThread.start()
-        self.LineDet.start()
 
         for joint in self.map.joints: # -2 если на втором повороте заехали, -1 если на первом для ключей
             if joint.leftDot.id == self.startDot:
@@ -360,18 +353,11 @@ class Car:  # основные методы, которые будут испо�
                 else:
                     self.startDot = joint.GetNegative(self.startDot)  # если оказались на перекрестке продолжаем движение
             self.Path = self.map.FindTheWay(self.startDot, self.finishDot)
-        self.CW.off()
-        self.WallDet.off()
-        self.SignThread.off()
-        self.LineDet.off()
+    
         return 2
 
 
     def circle_road(self):
-        self.CW.start()
-        self.LineDet.start()
-        self.WallDet.start()
-        
         
         self.CarCon.move()
         self.CarCon.turn()
@@ -390,30 +376,28 @@ class Car:  # основные методы, которые будут испо�
             else:
                 self.CarCon.move(1,CarSettings.MoveSpeed) # прямо
          
-        self.CW.off()
-        self.LineDet.off()
-        self.WallDet.off()
         return 3
 
 
 
 
     def parking(self):
-        self.CW.start()
-        self.WallDet.start()
         self.LineDet.parking = True
-        self.LineDet.start()
         
         while self.LineDet.ParkingDis > CarSettings.ParkingDistance:  # подъезжаем
             self.CarCon.move()
         
         # паркуемся
         
+
+        return 4
+    
+    
+    def __del__(self):
         self.CW.off()
         self.WallDet.off()
+        self.SignThread.off()
         self.LineDet.off()
-        return 4
-
 
 
 
