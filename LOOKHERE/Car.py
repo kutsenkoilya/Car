@@ -68,13 +68,13 @@ class Car:  # основные методы, которые будут испо�
             self.bluesigns = 0
             self.RedIsON = False
             self.mark = False
-            self.frame = 0
+            self.frame = []
             self.brick = 0
 
         def run(self):  # по задумке 0-прямая дорога, 1-перекресток, 2-знак,3-препятствие
             self.mark = True
             while self.mark:
-                if self.frame!=0:
+                if len(self.frame)>0:
                     self.brick = self.Detecctor.DetectRedSign(self.frame, False)
                     self.bluesigns = self.DetectBlueSign(self.frame, False)
                     self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
@@ -100,11 +100,11 @@ class Car:  # основные методы, которые будут испо�
             self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=True)
             if not self.parking:
                 while self.mark:
-                    if self.frame!=0:
+                    if len(self.frame)>0:
                         self.lines = self.Road.poke(self.frame)
             else:
                 while self.mark:
-                    if self.frame!=0:
+                    if len(self.frame)>0:
                         self.ParkingDis = self.Road.poke(self.frame)
                     
                     
