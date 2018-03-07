@@ -29,9 +29,9 @@ class Car:  # основные методы, которые будут испо�
         self.finishDot = 18
         self.CW.start()
         time.sleep(1)
-        self.WallDet.start()
-        self.SignThread.start()
-        self.LineDet.start()
+        #self.WallDet.start()
+        #self.SignThread.start()
+        #self.LineDet.start()
 
     class CameraWrapper(Thread):
         def __init__(self, l, t):
