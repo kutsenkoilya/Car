@@ -8,7 +8,7 @@ import time
 from CarControl import CarControl
 import CarSettings
 class Car:
-    def __init(self,device):
+    def __init__(self,device):
         self.CarCon=CarControl(device)
 
 
