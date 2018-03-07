@@ -87,7 +87,7 @@ class RoadControl:
                 break
 
         if not leftAlarm:
-            dist.append(None)
+            dist.append(10000)
 
         for i in range(0, self.vec2[2]):
             y = int(self.centre[1] + self.vec2[1] * i)
@@ -101,6 +101,6 @@ class RoadControl:
                 break
         
         if not rightAlarm:
-            dist.append(None)
+            dist.append(10000)
 
         return dist
