@@ -18,6 +18,7 @@ PiCameraFrameRate = 32
 RecEnabled = 0
 
 #MOVEMENT SETTINGS
+Stop = 10
 RightToLeftDegree = 30
 LeftToRightDegree = 30
 MoveSpeed = 125
