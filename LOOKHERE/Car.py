@@ -254,7 +254,7 @@ class Car:  # основные методы, которые будут испо�
         return self.SignThread.bluesigns  # иначе завершаем движение и выдаем знак
     def Road(self):
         self.WallDet.start()
-        self.CarCon.move(1,50)
+        self.CarCon.move(1,125)
         if self.WallDet.walls[1]<CarSettings.CriticalWallRange:
             self.CarCon.move(0,CarSettings.Stop)
             
