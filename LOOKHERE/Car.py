@@ -260,12 +260,13 @@ class Car:  # основные методы, которые будут испо�
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
         return self.SignThread.bluesigns  # иначе завершаем движение и выдаем знак
     def Road(self):
+        self.CarCon.move(1,125)
         while True:
             time.sleep(1)
             walls = self.CarCon.getDistance()
             print(walls[0],walls[1],walls[2])
             time.sleep(1)
-            self.CarCon.move(1,125)
+           
             if walls[1]<CarSettings.CriticalWallRange:
                 self.CarCon.move(0,CarSettings.Stop)
                 break
