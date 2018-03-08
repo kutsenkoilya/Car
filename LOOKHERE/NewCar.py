@@ -4,7 +4,6 @@ import Map
 import LineDetector
 import CarControl
 from Detector import Detector
-from threading import Thread
 import cv2
 import time
 import numpy as np
@@ -18,144 +17,29 @@ import CarSettings as CarSettings
 class Car:  # основные методы, которые будут использоваться на соревнованиях speedy_road,city_road,parking, circle_road
     def __init__(self, device):  # тут бы по хорошему проинициализировать все что у нас написано
         self.CarCon = CarControl.CarControl(device)  # кар контролу передаем девайс которым пользуемся
-        self.SignThread = self.SignThread()
-        self.LineDet = self.LineThread()
-        self.CW = self.CameraWrapper(self.LineDet, self.SignThread)
-        self.WallDet = self.WallThread(self.CarCon)  # детектор стен
+        self.Detector=  Detector()
+        self.Road = 0
         self.map = Map.MyMap(open('graph.txt'))  # нам нужна карта для построения маршрута
         self.Path = []
         self.prev = 0
         self.startDot = 1
         self.finishDot = 18
-        self.CW.start()
-        time.sleep(1)
-        #self.WallDet.start()
-        #self.SignThread.start()
-        #self.LineDet.start()
-
-    class CameraWrapper(Thread):
-        def __init__(self, l, t):
-            Thread.__init__(self)
-            self.camera = PiCamera()
-            self.camera.resolution = (CarSettings.PiCameraResW, CarSettings.PiCameraResH)
-            self.camera.framerate = CarSettings.PiCameraFrameRate
-            self.camera.vflip = True
-            self.camera.hflip = True
-            self.rawCapture = PiRGBArray(self.camera, size=(CarSettings.PiCameraResW, CarSettings.PiCameraResH))
-            self.image = 0
-            self.mark = False
-            self.L = l  #
-            self.T = t  # лайн и сайн детектор соответственно
-
-        def run(self):  # dsf
-            self.mark = True
-            while (self.mark):
-                for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
-                    image = frame.array
-                    self.L.frame = image.copy()
-                    self.T.frame = image
-                    k = cv2.waitKey(30) & 0xff
-                    if k == 27:
-                        break;
-                    time.sleep(0.01)
-                    # очистка кадра. важная штука!
-                    self.rawCapture.truncate(0)
-        
-            cv2.destroyAllWindows()
-
-        def off(self):
-            self.mark = False
-
-    class SignThread(Thread):  # поток для детектирования знаков и ситуаций на дороге
-        def __init__(self):
-            Thread.__init__(self)
-            self.Detector = Detector()
-            self.bluesigns = 0
-            self.RedIsON = False
-            self.mark = False
-            self.frame = np.array([])
-            self.brick = 0
-
-        def run(self):  # по задумке 0-прямая дорога, 1-перекресток, 2-знак,3-препятствие
-            self.mark = True
-            while self.mark:
-                if len(self.frame)>0:
-                    self.brick = self.Detector.DetectRedSign(self.frame, False)
-                    self.bluesigns = self.Detector.DetectBlueSign(self.frame, False)
-                    self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
-                    # 3 - движение вперед 4 - направо 5 - налево 6 - прямо или направо 7 - прямо или налево
-                    time.sleep(0.01)    
-        def off(self):
-            self.mark = False
-
-    class LineThread(Thread):  # поток для детектирования полос
-        def __init__(self):
-            Thread.__init__(self)
-            self.lines = []
-            self.mark = False
-            self.parking = False
-            self.frame = np.array([])
-            self.Road = 0
-            self.ParkingDis = 0
-
-        def run(self):
-            
-            self.mark = True
-            vecs = [[-3, -1, 70], [3, -1, 70]]
-            self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=False)
-            if not self.parking:
-                while self.mark:
-                    if len(self.frame)>0:
-                        self.Road.img=self.frame
-                        self.lines= self.Road.poke()
-                        time.sleep(0.01)
-            else:
-                while self.mark:
-                    if len(self.frame)>0:
-                        self.ParkingDis = self.Road.poke(self.frame)
-                    
-                    pass
-                    # detect parking
-
-        def off(self):
-            self.mark = False
-
-    class WallThread(Thread):  # поток для детектирования стен
-        def __init__(self,control):
-            Thread.__init__(self)
-            self.WD = control
-            self.walls = [10000,10000,10000]  # 0 слева 1 спереди 2 справа
-            self.mark = False
-            self.crossroad = False
-            self.fullcross = False
-
-        def run(self):
-            self.mark = True
-            
-            while self.mark:
-                cop = self.WD.getDistance()
-                for i in range (3):
-                    if type(cop[i]) == type(None):
-                        self.walls[i]=10000
-                
-                    else:
-                        self.walls[i]=cop[i]
-                print(self.walls[0],self.walls[1],self.walls[2])
-                self.walls = self.WD.getDistance()
-                if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
-                    self.crossroad = True
-                else:
-                    self.crossroad = False
-                if self.walls[0] < CarSettings.WallRange and self.walls[2] < CarSettings.WallRange:  # подставить константы
-                    self.fullcross = True
-                else:
-                    self.fullcross = False
-
-        def off(self):
-            self.mark = False
-
+        self.bluesigns= 0
+        self.walls = [10000, 10000, 10000]
+        self.lines = [10000,10000,10000]
+        self.frame = np.array([])
+        self.RedIsON = 0
+        self.brick = 0
+        self.camera = PiCamera()
+        self.camera.resolution = (CarSettings.PiCameraResW, CarSettings.PiCameraResH)
+        self.camera.framerate = CarSettings.PiCameraFrameRate
+        self.camera.vflip = True
+        self.camera.hflip = True
+        self.rawCapture = PiRGBArray(self.camera, size=(CarSettings.PiCameraResW, CarSettings.PiCameraResH))
+        self.crossroad = False
+        self.fullcross = False
     def light_handler(self):
-        while self.SignThread.RedIsON:
+        while self.RedIsON:
             self.CarCon.move(0,CarSettings.Stop)
             pass
         return
@@ -216,18 +100,18 @@ class Car:  # основные методы, которые будут испо�
 
     def turn_on(self, direction): # переезд перекрестка
         if direction == 0:  # едем прямо
-            while self.WallDet.crossroad:
+            while self.crossroad:
                 self.CarCon.move(1,CarSettings.MoveSpeed)
         if direction == 1:  # поворот вправо
-            while self.WallDet.crossroad:
+            while self.crossroad:
                 self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.RightTurnAngle)
         if direction == -1:  # поворот влево
-            while self.WallDet.crossroad:
+            while self.crossroad:
                 self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
         if direction == -2:  # разворот
-            while self.WallDet.crossroad:
+            while self.crossroad:
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
                 self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
@@ -236,66 +120,127 @@ class Car:  # основные методы, которые будут испо�
         return
 
     def simple_line(self):  # езда по скоростной
-        while not self.WallDet.crossroad and self.SignThread.bluesigns == 0:
+        vecs = [[-3, -1, 70], [3, -1, 70]]
+        self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=False)
+        
+        while not self.crossroad and self.bluesigns == 0:
+            for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
+                    image = frame.array
+            cop = self.CarCon.getDistance()
+            for i in range (3):
+                if type(cop[i]) == type(None):
+                    self.walls[i]=10000
+                else:
+                    self.walls[i]=cop[i]
+            self.walls = self.CarCon.getDistance()
+            if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
+                self.crossroad = True
+            else:
+                self.crossroad = False
+            if self.walls[0] < CarSettings.WallRange and self.walls[2] < CarSettings.WallRange:  # подставить константы
+                self.fullcross = True
+            else:
+                self.fullcross = False
+            
+            
+            self.Road.img=image.copy()
+            self.lines = self.Road.poke()
+            self.brick = self.Detector.DetectRedSign(image, False)
+            self.bluesigns = self.Detector.DetectBlueSign(self.frame, False)
+            self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
             self.light_handler()
-            if self.WallDet.walls[1]<CarSettings.WallRange:
-                if self.WallDet.walls[0]>CarSettings.WallRange:
+            if self.walls[1]<CarSettings.WallRange:
+                if self.walls[0]>CarSettings.WallRange:
+                    self.CarCon.turn(CarSettings.RightToLeftDegree)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
+                elif self.walls[1]>CarSettings.WallRange:
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                 else:
-                    self.CarCon.turn(CarSettings.RightToLeftDegree)
-                    self.CarCon.move(1,CarSettings.MoveSpeed)
-                    self.CarCon.turn(CarSettings.DefaultAngle)
+                    self.CarCon.move(0,CarSettings.Stop)
             else:
-                if self.LineDet.lines[0] < CarSettings.LineRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
+                if self.lines[0] < CarSettings.LineRange or self.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     pass
-                if self.LineDet.lines[1] < CarSettings.LineRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
+                if self.lines[1] < CarSettings.LineRange or self.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     pass
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
-        return self.SignThread.bluesigns  # иначе завершаем движение и выдаем знак
+            self.rawCapture.truncate(0)
+            cv2.destroyAllWindows()
+            
+        return self.bluesigns  # иначе завершаем движение и выдаем знак
     
             
             
         		
     def moving_on_line(self, joint):  # двигаемся по маршруту
-        while not self.WallDet.crossroad:  # проверяем что ничего нового не встретилось
+       
+        while not self.crossroad:  # проверяем что ничего нового не встретилось
+            for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
+                    image = frame.array
+            cop = self.CarCon.getDistance()
+            for i in range (3):
+                if type(cop[i]) == type(None):
+                    self.walls[i]=10000
+                else:
+                    self.walls[i]=cop[i]
+            self.walls = self.CarCon.getDistance()
+            if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
+                self.crossroad = True
+            else:
+                self.crossroad = False
+            if self.walls[0] < CarSettings.WallRange and self.walls[2] < CarSettings.WallRange:  # подставить константы
+                self.fullcross = True
+            else:
+                self.fullcross = False
+            
+            
+            self.Road.img=image.copy()
+            self.lines = self.Road.poke()
+            self.brick = self.Detector.DetectRedSign(image, False)
+            self.bluesigns = self.Detector.DetectBlueSign(image, False)
+            self.RedIsON = self.Detector.DetectTrLight(image, False)
+            
             self.light_handler()
-            if self.SignThread.brick:
+            if self.brick:
                 self.brick_handler(joint)
                 return 1
-            elif self.SignThread.bluesigns != 0:
-                return self.SignThread.bluesigns
+            elif self.bluesigns != 0:
+                return self.bluesigns
             else:
-                if self.WallDet.walls[1]<CarSettings.WallRange:
-                    if self.WallDet.walls[0]>CarSettings.WallRange:
+                if self.walls[1]<CarSettings.WallRange:
+                    if self.walls[0]>CarSettings.WallRange:
                         self.CarCon.turn(CarSettings.RightToLeftDegree)
                         self.CarCon.move(1,CarSettings.MoveSpeed)
                         self.CarCon.turn(CarSettings.DefaultAngle)
-                    elif self.WallDet.walls[2]>CarSettings.WallRange:
+                    elif self.walls[2]>CarSettings.WallRange:
                         self.CarCon.turn(Car.LeftToRightDegree)
                         self.CarCon.move(1,CarSettings.MoveSpeed)
                         self.CarCon.turn(CarSettings.DefaultAngle)
                     else:
                         self.CarCon.move(0,CarSettings.Stop)
                         return
-                if self.LineDet.lines[0] < CarSettings.LineRange or self.WallDet.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
+                if self.lines[0] < CarSettings.LineRange or self.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
-                elif self.LineDet.lines[1] < CarSettings.LineRange or self.WallDet.walls[2] < CarSettings.WallRange:  #
+                elif self.lines[1] < CarSettings.LineRange or self.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
                     self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
+        self.rawCapture.truncate(0)
+        cv2.destroyAllWindows()
+
 
         return 0  # доехали без проблем до перекрестка или нет?
 
@@ -303,11 +248,11 @@ class Car:  # основные методы, которые будут испо�
        
         
         self.simple_line()  # держимся нашей прямой
-        if self.SignThread.bluesigns == 6 or self.WallDet.crossroad or self.SignThread.bluesigns==4:  # поворот направо
+        if self.bluesigns == 6 or self.crossroad or self.bluesigns==4:  # поворот направо
             # на самом деле достаточно знать только что правый поворот открыт
             self.turn_on(1)
         self.simple_line()
-        if self.SignThread.bluesigns == 3:
+        if self.bluesigns == 3:
             self.turn_on(0)
             self.startDot = 1
         else:
@@ -341,7 +286,7 @@ class Car:  # основные методы, которые будут испо�
                         changed = self.blue_sign_handler(sign, joint)
                     if changed:
                         break
-                elif not self.WallDet.crossroad:  # если что-то помешало придется вернутся и перестроить маршрут
+                elif not self.crossroad:  # если что-то помешало придется вернутся и перестроить маршрут
                     joint.Delete()
                     self.turn_on(-2) # придется развернутся -2 разворот
                     break
@@ -354,16 +299,16 @@ class Car:  # основные методы, которые будут испо�
 
     def circle_road(self):
         
-        self.CarCon.move()
-        self.CarCon.turn()
-        self.CarCon.move()
-        while not self.WallDet.crossroad: # проверяем что ничего нового не встретилось
-            if self.LineDet.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
+        self.CarCon.move(1,CarSettings.MoveSpeed)
+        self.CarCon.turn(CarSettings.DefaultAngle)
+        self.CarCon.move(1,CarSettings.MoveSpeed)
+        while not self.crossroad: # проверяем что ничего нового не встретилось
+            if self.lines[0] or self.walls[0]:  # отъезжаем от стены или от линии подобрать константы
                 self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.RightTurnAngle)
                 pass
                 # отворачиваем
-            if self.LineDet.lines[1] or self.walls[2]:  #
+            if self.lines[1] or self.walls[2]:  #
                 self.CarCon.move(1,CarSettings.MoveSpeed)
                 self.CarCon.turn(CarSettings.LeftTurnAngle)
                 pass
@@ -377,9 +322,9 @@ class Car:  # основные методы, которые будут испо�
 
 
     def parking(self):
-        self.LineDet.parking = True
+        self.parking = True
         
-        while self.LineDet.ParkingDis > CarSettings.ParkingDistance:  # подъезжаем
+        while self.ParkingDis > CarSettings.ParkingDistance:  # подъезжаем
             self.CarCon.move()
         
         # паркуемся
@@ -387,13 +332,3 @@ class Car:  # основные методы, которые будут испо�
 
         return 4
     
-    
-    def __del__(self):
-        self.CW.off()
-        self.WallDet.off()
-        self.SignThread.off()
-        self.LineDet.off()
-
-
-
-
