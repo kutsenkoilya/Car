@@ -38,7 +38,7 @@ class Car:
                 self.fullcross = True
             else:
                 self.fullcross = False
-            
+            print(walls)
             if self.walls[1]<CarSettings.WallRange:
                 if self.walls[0]>CarSettings.WallRange:
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
