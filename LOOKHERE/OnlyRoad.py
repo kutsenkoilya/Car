@@ -5,7 +5,7 @@ Created on Thu Mar  8 12:34:39 2018
 @author: Илья
 """
 
-from NewCar import Car
+from AnotherCar import Car
 import time
 
 
