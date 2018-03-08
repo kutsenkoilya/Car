@@ -18,6 +18,7 @@ camera = cv2.VideoCapture(0)
 #camera.vflip = True
 #camera.hflip = True
 #rawCapture = PiRGBArray(camera, size=(CarSettings.PiCameraResW, CarSettings.PiCameraResH))
-image = camera.read()[1]
-image = cv2.flip(image, -1)
-print (image)
+while True:    
+    image = camera.read()[1]
+    image = cv2.flip(image, -1)
+    cv2.imshow(image)
