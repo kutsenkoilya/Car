@@ -5,7 +5,7 @@ Created on Thu Mar  8 13:29:45 2018
 @author: Илья
 """
 import CarSettings
-from CarControl import CarControl
+from CarControl import CarControl#sdklfmsl
 
 
 

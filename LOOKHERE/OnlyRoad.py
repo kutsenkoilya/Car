@@ -10,4 +10,4 @@ import time
 
 
 Carry=Car("/dev/ttyUSB0") #создаем машинку
-Carry.nothing()
+Carry.nothing()#33234242
