@@ -189,8 +189,8 @@ class Car:  # основные методы, которые будут испо�
             self.Road.img=image.copy()
             self.lines = self.Road.poke()
             self.brick = self.Detector.DetectRedSign(image, False)
-            self.bluesigns = self.Detector.DetectBlueSign(self.frame, False)
-            self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
+            self.bluesigns = self.Detector.DetectBlueSign(image, False)
+            self.RedIsON = self.Detector.DetectTrLight(image, False)
             if self.walls[0] > CarSettings.WallRange and self.lines[0]> CarSettings.LineRange or self.walls[2] > CarSettings.WallRange and self.lines[1]> CarSettings.LineRange:  # подставить константы
                 self.crossroad = True
             else:
