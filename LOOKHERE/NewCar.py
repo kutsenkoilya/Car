@@ -30,12 +30,13 @@ class Car:  # основные методы, которые будут испо�
         self.frame = np.array([])
         self.RedIsON = 0
         self.brick = 0
-        self.camera = PiCamera()
-        self.camera.resolution = (CarSettings.PiCameraResW, CarSettings.PiCameraResH)
-        self.camera.framerate = CarSettings.PiCameraFrameRate
-        self.camera.vflip = True
-        self.camera.hflip = True
-        self.rawCapture = PiRGBArray(self.camera, size=(CarSettings.PiCameraResW, CarSettings.PiCameraResH))
+        #self.camera = PiCamera()
+        self.camera = cv2.VideoCapture(0)
+        #self.camera.resolution = (CarSettings.PiCameraResW, CarSettings.PiCameraResH)
+        #self.camera.framerate = CarSettings.PiCameraFrameRate
+        #self.camera.vflip = True
+        #self.camera.hflip = True
+        #self.rawCapture = PiRGBArray(self.camera, size=(CarSettings.PiCameraResW, CarSettings.PiCameraResH))
         self.crossroad = False
         self.fullcross = False
     def light_handler(self):
@@ -121,11 +122,17 @@ class Car:  # основные методы, которые будут испо�
 
     def simple_line(self):  # езда по скоростной
         vecs = [[-3, -1, 70], [3, -1, 70]]
-        image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
+        #image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
+        image = self.camera.read()[1]
+        image = cv2.flip(image, -1)
+        
         self.Road = LineDetector.RoadControl(image, 240, vecs, viz=False)
         
         while not self.crossroad and self.bluesigns == 0:
-            image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
+            #image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
+            image = self.camera.read()[1]
+            image = cv2.flip(image, -1)
+            
             cop = self.CarCon.getDistance()
             for i in range (3):
                 if type(cop[i]) == type(None):
@@ -182,7 +189,10 @@ class Car:  # основные методы, которые будут испо�
     def moving_on_line(self, joint):  # двигаемся по маршруту
        
         while not self.crossroad:  # проверяем что ничего нового не встретилос
-            image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
+            #image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
+            image = self.camera.read()[1]
+            image = cv2.flip(image, -1)
+        
             cop = self.CarCon.getDistance()
             for i in range (3):
                 if type(cop[i]) == type(None):
