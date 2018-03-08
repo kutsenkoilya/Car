@@ -174,7 +174,7 @@ class Car:  # основные методы, которые будут испо�
         
         self.Road = LineDetector.RoadControl(image, 240, vecs, viz=False)
         
-        while not self.crossroad and self.bluesigns == 0:
+        while not self.fullcross and self.bluesigns == 0:
             #image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
             image = self.camera.read()[1]
             image = cv2.flip(image, -1)
@@ -226,7 +226,7 @@ class Car:  # основные методы, которые будут испо�
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
             #self.rawCapture.truncate(0)
             cv2.destroyAllWindows()
-            
+        self.CarCon.move(0,CarSettings.Stop)
         return self.bluesigns  # иначе завершаем движение и выдаем знак
     
             

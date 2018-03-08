@@ -25,10 +25,10 @@ class CarControl:
         self.ser.write(int(0).to_bytes(1, 'big'))
 
         for i in range(0, 3):
-            time.sleep(0.0002)
             sonic_id = int.from_bytes(self.ser.read(), 'big')
             sonic_dist = int.from_bytes(self.ser.read(), 'big')
-
+            time.sleep(0.0002)
+            
             if sonic_dist > 0 and sonic_dist < 30:
                 dists[sonic_id] = sonic_dist
 
