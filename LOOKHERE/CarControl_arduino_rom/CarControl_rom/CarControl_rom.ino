@@ -41,15 +41,15 @@ void loop() {
 
   if (event == 4) {
     Serial.write(0);
-    Serial.write(sonic_l.distanceRead());
+    Serial.write(readDistanceSmoothly(sonic_l));
     delay(10);
    
     Serial.write(1);
-    Serial.write(sonic_m.distanceRead());
+    Serial.write(readDistanceSmoothly(sonic_m));
     delay(10);
     
     Serial.write(2);
-    Serial.write(sonic_r.distanceRead());
+    Serial.write(readDistanceSmoothly(sonic_r));
     delay(10);
     
     event = 256;
@@ -74,3 +74,43 @@ void loop() {
     digitalWrite(eng_b,HIGH);
   }
 }
+
+float readDistanceSmoothly(Ultrasonic s)
+{
+  float x;
+  float prev_val; 
+  float delta;
+  int counter = 0;
+  float sum = 0;
+  
+  for (int i = 0; i < 5; i++)
+  {
+    x = s.distanceRead();
+
+    if (x>1000)
+    {
+      x = 1000;
+      }
+    
+    if (i>0)
+    {
+      delta = x - prev_val;
+      if (delta < 10)
+      {
+        sum += x;
+        counter++;
+      }
+    }
+    else
+    {
+      sum += x;
+      counter++;
+    }
+    prev_val = x;
+    delay(10);
+  
+  }
+  
+  return x / counter;
+  
+  }
