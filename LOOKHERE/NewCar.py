@@ -26,7 +26,7 @@ class Car:  # основные методы, которые будут испо�
         self.finishDot = 18
         self.bluesigns= 0
         self.walls = [10000, 10000, 10000]
-        self.lines = [10000,10000,10000]
+        self.lines = [10000,10000]
         self.frame = np.array([])
         self.RedIsON = 0
         self.brick = 0
