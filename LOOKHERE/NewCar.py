@@ -39,6 +39,9 @@ class Car:  # основные методы, которые будут испо�
         #self.rawCapture = PiRGBArray(self.camera, size=(CarSettings.PiCameraResW, CarSettings.PiCameraResH))
         self.crossroad = False
         self.fullcross = False
+        self.CarCon.turn(CarSettings.DefaultAngle)
+        self.CarCon.move(0,CarSettings.Stop)
+        
     def light_handler(self):
         while self.RedIsON:
             self.CarCon.move(0,CarSettings.Stop)
@@ -154,14 +157,16 @@ class Car:  # основные методы, которые будут испо�
                 if self.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
                     self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 if  self.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
-            
+        self.CarCon.turn(CarSettings.DefaultAngle)
         return 1  # иначе завершаем движение и выдаем знак
         
     
@@ -217,15 +222,18 @@ class Car:  # основные методы, которые будут испо�
                 if self.lines[0] < CarSettings.LineRange or self.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
                     self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 if self.lines[1] < CarSettings.LineRange or self.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
             #self.rawCapture.truncate(0)
             cv2.destroyAllWindows()
+        self.CarCon.turn(CarSettings.DefaultAngle)
         self.CarCon.move(0,CarSettings.Stop)
         return self.bluesigns  # иначе завершаем движение и выдаем знак
     

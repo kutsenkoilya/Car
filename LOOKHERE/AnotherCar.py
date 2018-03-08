@@ -16,6 +16,8 @@ class Car:
         self.crossroad=False
         self.fullcross=False
         self.walls=[10000,10000,10000]
+        self.CarCon.turn(CarSettings.DefaultAngle)
+        self.CarCon.move(0,CarSettings.Stop)
         pass
     def nothing(self):
         while not self.fullcross:
@@ -51,14 +53,18 @@ class Car:
                 if self.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
                     self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
                     self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 if  self.walls[2] < CarSettings.WallRange:  #
                     self.CarCon.turn(CarSettings.RightToLeftDegree)
                     self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
                     pass
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
-            
+                    
+                    
+        self.CarCon.move(0,CarSettings.Stop)
         return 1  # иначе завершаем движение и выдаем знак
         
     
