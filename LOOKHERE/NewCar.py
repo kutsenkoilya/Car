@@ -121,7 +121,8 @@ class Car:  # основные методы, которые будут испо�
 
     def simple_line(self):  # езда по скоростной
         vecs = [[-3, -1, 70], [3, -1, 70]]
-        self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=False)
+        image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
+        self.Road = LineDetector.RoadControl(image, 240, vecs, viz=False)
         
         while not self.crossroad and self.bluesigns == 0:
             image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
