@@ -27,11 +27,11 @@ class Car:
                 else:
                     self.walls[i]=cop[i]
             self.walls = self.CarCon.getDistance()
-            if self.walls[0] > CarSettings.WallRange  or self.walls[2] > CarSettings.WallRange :  # подставить константы
+            if self.walls[0] > CarSettings.MaxWallRange  or self.walls[2] > CarSettings.MaxWallRange :  # подставить константы
                 self.crossroad = True
             else:
                 self.crossroad = False
-            if  self.walls[0] > CarSettings.WallRange and self.walls[2] > CarSettings.WallRange :  # подставить константы
+            if  self.walls[0] > CarSettings.MaxWallRange and self.walls[2] > CarSettings.MaxWallRange :  # подставить константы
                 self.fullcross = True
             else:
                 self.fullcross = False
