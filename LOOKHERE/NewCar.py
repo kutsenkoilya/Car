@@ -133,21 +133,21 @@ class Car:  # основные методы, которые будут испо�
                 else:
                     self.walls[i]=cop[i]
             self.walls = self.CarCon.getDistance()
-            if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
-                self.crossroad = True
-            else:
-                self.crossroad = False
-            if self.walls[0] < CarSettings.WallRange and self.walls[2] < CarSettings.WallRange:  # подставить константы
-                self.fullcross = True
-            else:
-                self.fullcross = False
-            
-            
             self.Road.img=image.copy()
             self.lines = self.Road.poke()
             self.brick = self.Detector.DetectRedSign(image, False)
             self.bluesigns = self.Detector.DetectBlueSign(self.frame, False)
             self.RedIsON = self.Detector.DetectTrLight(self.frame, False)
+            if self.walls[0] > CarSettings.WallRange and self.lines[0]> CarSettings.LineRange or self.walls[2] > CarSettings.WallRange and self.lines[1]> CarSettings.LineRange:  # подставить константы
+                self.crossroad = True
+            else:
+                self.crossroad = False
+            if  self.walls[0] > CarSettings.WallRange and self.lines[0]> CarSettings.LineRange and self.walls[2] > CarSettings.WallRange and self.lines[1]> CarSettings.LineRange:  # подставить константы
+                self.fullcross = True
+            else:
+                self.fullcross = False
+            
+            
             self.light_handler()
             if self.walls[1]<CarSettings.WallRange:
                 if self.walls[0]>CarSettings.WallRange:
@@ -191,21 +191,23 @@ class Car:  # основные методы, которые будут испо�
                 else:
                     self.walls[i]=cop[i]
             self.walls = self.CarCon.getDistance()
-            if self.walls[0] < CarSettings.WallRange or self.walls[2] < CarSettings.WallRange:  # подставить константы
-                self.crossroad = True
-            else:
-                self.crossroad = False
-            if self.walls[0] < CarSettings.WallRange and self.walls[2] < CarSettings.WallRange:  # подставить константы
-                self.fullcross = True
-            else:
-                self.fullcross = False
-            
             
             self.Road.img=image.copy()
             self.lines = self.Road.poke()
             self.brick = self.Detector.DetectRedSign(image, False)
             self.bluesigns = self.Detector.DetectBlueSign(image, False)
             self.RedIsON = self.Detector.DetectTrLight(image, False)
+            
+            if self.walls[0] > CarSettings.WallRange and self.lines[0]> CarSettings.LineRange or self.walls[2] > CarSettings.WallRange and self.lines[1]> CarSettings.LineRange:  # подставить константы
+                self.crossroad = True
+            else:
+                self.crossroad = False
+            if  self.walls[0] > CarSettings.WallRange and self.lines[0]> CarSettings.LineRange and self.walls[2] > CarSettings.WallRange and self.lines[1]> CarSettings.LineRange:  # подставить константы
+                self.fullcross = True
+            else:
+                self.fullcross = False
+            
+            
             
             self.light_handler()
             if self.brick:
