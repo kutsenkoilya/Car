@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Mar  8 11:14:30 2018
+from NewCar import Car
+import time
 
-@author: Илья
-"""
+time.sleep(5)
+Carry=Car("/dev/ttyUSB0") #создаем машинку
+Carry.speedy_road()
+Carry.city_road()
+Carry.circle_road()
+Carry.parking()
 
