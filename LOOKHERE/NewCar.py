@@ -119,7 +119,53 @@ class Car:  # основные методы, которые будут испо�
                 self.CarCon.move(1,CarSettings.MoveSpeed)
 
         return
-
+    
+    def nothing(self):
+        while not self.crossroad:
+            
+            cop = self.CarCon.getDistance()
+            for i in range (3):
+                if type(cop[i]) == type(None):
+                    self.walls[i]=10000
+                else:
+                    self.walls[i]=cop[i]
+            self.walls = self.CarCon.getDistance()
+            if self.walls[0] > CarSettings.WallRange  or self.walls[2] > CarSettings.WallRange :  # подставить константы
+                self.crossroad = True
+            else:
+                self.crossroad = False
+            if  self.walls[0] > CarSettings.WallRange and self.walls[2] > CarSettings.WallRange :  # подставить константы
+                self.fullcross = True
+            else:
+                self.fullcross = False
+            
+            if self.walls[1]<CarSettings.WallRange:
+                if self.walls[0]>CarSettings.WallRange:
+                    self.CarCon.turn(CarSettings.RightToLeftDegree)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
+                elif self.walls[1]>CarSettings.WallRange:
+                    self.CarCon.turn(CarSettings.RightToLeftDegree)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
+                    self.CarCon.turn(CarSettings.DefaultAngle)
+                else:
+                    self.CarCon.move(0,CarSettings.Stop)
+            else:
+                if self.walls[0] < CarSettings.WallRange:  # отъезжаем от стены или от линии подобрать константы
+                    self.CarCon.turn(CarSettings.LeftToRightDegree)  # угол настроить
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
+                    pass
+                if  self.walls[2] < CarSettings.WallRange:  #
+                    self.CarCon.turn(CarSettings.RightToLeftDegree)
+                    self.CarCon.move(1,CarSettings.MoveSpeed)
+                    pass
+                else:
+                    self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
+            
+        return 1  # иначе завершаем движение и выдаем знак
+        
+    
+    
     def simple_line(self):  # езда по скоростной
         vecs = [[-3, -1, 70], [3, -1, 70]]
         #image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
