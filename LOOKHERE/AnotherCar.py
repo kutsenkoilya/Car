@@ -20,6 +20,7 @@ class Car:
         self.CarCon.move(0,CarSettings.Stop)
         pass
     def nothing(self):
+        self.CarCon.move(1,CarSettings.MoveSpeed)
         while not self.fullcross:
             
             cop = self.CarCon.getDistance()
