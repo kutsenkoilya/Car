@@ -124,8 +124,7 @@ class Car:  # основные методы, которые будут испо�
         self.Road = LineDetector.RoadControl(self.frame, 240, vecs, viz=False)
         
         while not self.crossroad and self.bluesigns == 0:
-            for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
-                    image = frame.array
+            image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
             cop = self.CarCon.getDistance()
             for i in range (3):
                 if type(cop[i]) == type(None):
@@ -181,9 +180,8 @@ class Car:  # основные методы, которые будут испо�
         		
     def moving_on_line(self, joint):  # двигаемся по маршруту
        
-        while not self.crossroad:  # проверяем что ничего нового не встретилось
-            for frame in self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True):
-                    image = frame.array
+        while not self.crossroad:  # проверяем что ничего нового не встретилос
+            image = self.camera.capture_continuous(self.rawCapture, format="bgr", use_video_port=True)[0]
             cop = self.CarCon.getDistance()
             for i in range (3):
                 if type(cop[i]) == type(None):
@@ -327,7 +325,7 @@ class Car:  # основные методы, которые будут испо�
         self.parking = True
         
         while self.ParkingDis > CarSettings.ParkingDistance:  # подъезжаем
-            self.CarCon.move()
+            self.CarCon.move(1,CarSettings.MoveSpeed)
         
         # паркуемся
         
