@@ -224,7 +224,7 @@ class Car:  # основные методы, которые будут испо�
                     pass
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
-            self.rawCapture.truncate(0)
+            #self.rawCapture.truncate(0)
             cv2.destroyAllWindows()
             
         return self.bluesigns  # иначе завершаем движение и выдаем знак
@@ -295,7 +295,7 @@ class Car:  # основные методы, которые будут испо�
                     pass
                 else:
                     self.CarCon.move(1,CarSettings.MoveSpeed)  # прямо
-        self.rawCapture.truncate(0)
+        #self.rawCapture.truncate(0)
         cv2.destroyAllWindows()
 
 
